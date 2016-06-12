@@ -1,0 +1,5 @@
+griffon.plugins.sql2o
+griffon.plugins.sql2o.exceptions
+griffon.transform
+org.codehaus.griffon.runtime.jmx
+org.codehaus.griffon.runtime.sql2o
