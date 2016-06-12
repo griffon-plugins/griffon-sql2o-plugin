@@ -1,0 +1,25 @@
+apply plugin: 'groovy'
+apply plugin: 'org.codehaus.griffon.griffon'
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = true
+    version = rootProject.griffonVersion
+}
+
+apply from: rootProject.file('gradle/code-coverage.gradle')
+
+dependencies {
+    compile 'org.codehaus.griffon.plugins:griffon-datasource-core:1.2.0'
+    compile 'org.sql2o:sql2o:1.5.4'
+
+    testCompileOnly "org.codehaus.griffon:griffon-groovy-compile:${griffon.version}"
+
+    testRuntime('com.h2database:h2:1.4.192') { transitive = false }
+    testRuntime "org.slf4j:slf4j-simple:1.7.12"
+
+    testRuntime "org.codehaus.griffon:griffon-guice:${griffon.version}"
+
+}
+
+compileGroovy.enabled = false

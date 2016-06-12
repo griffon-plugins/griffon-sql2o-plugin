@@ -1,0 +1,13 @@
+
+:link_griffon_datasource_plugin: link:http://griffon-plugins.github.io/griffon-datasource-plugin[griffon-datasource-plugin, window="_blank"]
+:link_sql2o: link:http://www.sql2o.org/[Sql2o, window="_blank"]
+:link_sql2o_api: link:http://api.sql2o.org/1.5.4/org/sql2o/Sql2o.html[Sql2o, window="_blank"]
+
+:api_sql2o_handler: link:api/griffon/plugins/sql2o/Sql2oHandler.html[Sql2oHandler, window="_blank"]
+:api_sql2o_callback: link:api/griffon/plugins/sql2o/Sql2oCallback.html[Sql2oCallback, window="_blank"]
+:api_sql2o_aware: link:api/griffon/transform/Sql2oAware.html[@Sql2oAware, window="_blank"]
+:api_sql2o_bootstrap: link:api/griffon/plugins/sql2o/Sql2oBootstrap.html[Sql2oBootstrap, window="_blank"]
+
+:path_griffon_sql2o_core: {rootdir}/subprojects/griffon-sql2o-core
+:path_griffon_sql2o_groovy_compile: {rootdir}/subprojects/griffon-sql2o-groovy-compile
+
