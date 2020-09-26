@@ -27,7 +27,7 @@ with JDK8+ or closures if running Groovy.
 [source,java,options="nowrap"]
 .griffon.plugins.sql2o.Sql2oCallback.java
 ----
-include::{path_griffon_sql2o_core}/src/main/java/griffon/plugins/sql2o/Sql2oCallback.java[lines=25..-1]
+include::{path_griffon_sql2o_core}/src/main/java/griffon/plugins/sql2o/Sql2oCallback.java[lines=27..-1]
 ----
 
 === Bootstrap
@@ -91,17 +91,17 @@ The following is a trivial usage of the `{api_sql2o_handler}` inside a Java serv
 package com.acme;
 
 import griffon.core.artifact.GriffonService;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 
 import griffon.plugins.sql2o.Sql2oHandler;
 import griffon.plugins.sql2o.Sql2oCallback;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.sql2o.Sql2o;
 import org.sql2o.StatementRunnableWithResult;
 
 import javax.inject.Inject;
 
-@ArtifactProviderFor(GriffonService.class)
+@ServiceProviderFor(GriffonService.class)
 public class SampleService {
     @Inject
     private Sql2oHandler sql2oHandler
@@ -133,15 +133,15 @@ Here's the Groovy version of it
 package com.acme
 
 import griffon.core.artifact.GriffonService
-import griffon.metadata.ArtifactProviderFor
 
 import griffon.plugins.sql2o.Sql2oHandler
+import org.kordamp.jipsy.ServiceProviderFor
 import org.sql2o.Sql2o
 import org.sql2o.StatementRunnableWithResult
 
 import javax.inject.Inject
 
-@ArtifactProviderFor(GriffonService)
+@ServiceProviderFor(GriffonService)
 class SampleService {
     @Inject
     private Sql2oHandler sql2oHandler
@@ -162,10 +162,10 @@ class SampleService {
 
 The following events will be triggered by `{api_sql2o_handler}`
 
-Sql2oConnectStart(String datasourceName, Map<String, Object> config):: Triggered before connecting to the datasource.
-Sql2oConnectEnd(String datasourceName, Map<String, Object> config, Sql2o sql2o):: Triggered after connecting to the datasource.
-Sql2oDisconnectStart(String datasourceName, Map<String, Object> config, Sql2o sql2o):: Triggered before disconnecting from the datasource.
-Sql2oDisconnectEnd(String datasourceName, Map<String, Object> config):: Triggered after disconnecting from the datasource.
+Sql2oConnectStartEvent(String datasourceName, Map<String, Object> config):: Triggered before connecting to the datasource.
+Sql2oConnectEndEvent(String datasourceName, Map<String, Object> config, Sql2o sql2o):: Triggered after connecting to the datasource.
+Sql2oDisconnectStartEvent(String datasourceName, Map<String, Object> config, Sql2o sql2o):: Triggered before disconnecting from the datasource.
+Sql2oDisconnectEndEvent(String datasourceName, Map<String, Object> config):: Triggered after disconnecting from the datasource.
 
 NOTE: DataSource events may be triggered during connection and disconnection from a datasource.
 
@@ -180,14 +180,14 @@ into said class. The previous Groovy service example can be rewritten as follows
 package com.acme
 
 import griffon.core.artifact.GriffonService
-import griffon.metadata.ArtifactProviderFor
 import griffon.transform.Sql2oAware
 
+import org.kordamp.jipsy.ServiceProviderFor
 import org.sql2o.Sql2o
 import org.sql2o.StatementRunnableWithResult
 
 @Sql2oAware
-@ArtifactProviderFor(GriffonService)
+@ServiceProviderFor(GriffonService)
 class SampleService {
     Person findById(final int id) {
          sql2oHandler.withSql2o { String datasourceName, Sql2o sql2o ->

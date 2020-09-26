@@ -15,34 +15,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.plugins.sql2o.exceptions;
-
-import griffon.exceptions.GriffonException;
+package griffon.plugins.sql2o.events;
 
 import griffon.annotations.core.Nonnull;
+import griffon.core.event.Event;
+
+import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
-public class RuntimeSql2oException extends GriffonException {
-    private final String datasourceName;
+public class Sql2oConnectStartEvent extends Event {
+    private final String name;
+    private final Map<String, Object> config;
 
-    public RuntimeSql2oException(@Nonnull String datasourceName, @Nonnull Exception sqle) {
-        super(format(datasourceName), requireNonNull(sqle, "sqle"));
-        this.datasourceName = datasourceName;
+    public Sql2oConnectStartEvent(@Nonnull String name, @Nonnull Map<String, Object> config) {
+        this.name = requireNonBlank(name, "Argument 'name' must not be blank");
+        this.config = requireNonNull(config, "Argument 'config' must not be null");
     }
 
     @Nonnull
-    private static String format(@Nonnull String datasourceName) {
-        requireNonBlank(datasourceName, "datasourceName");
-        return "An error occurred when executing a statement on sql2o '" + datasourceName + "'";
+    public String getName() {
+        return name;
     }
 
     @Nonnull
-    public String getSql2oName() {
-        return datasourceName;
+    public Map<String, Object> getConfig() {
+        return config;
+    }
+
+    @Nonnull
+    public static Sql2oConnectStartEvent of(@Nonnull String name, @Nonnull Map<String, Object> config) {
+        return new Sql2oConnectStartEvent(name, config);
     }
 }

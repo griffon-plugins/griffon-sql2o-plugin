@@ -24,7 +24,7 @@ import org.codehaus.groovy.ast.expr.MethodCallExpression
 
 supportsVersion(groovyEclipse: '2.5.1')
 
-contribute(enclosingClass(annotatedBy('griffon.transform.Sql2oAware'))) {
+contribute(enclosingClass(annotatedBy('griffon.transform.sql2o.Sql2oAware'))) {
     provider = 'griffon-sql2o'
     delegatesTo 'griffon.plugins.sql2o.Sql2oHandler'
 }

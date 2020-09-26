@@ -20,6 +20,6 @@ import com.intellij.patterns.*
  * @author Andres Almiray
  */
 
-contributor(scope: annotatedScope(ctype: 'griffon.transform.Sql2oAware')) {
+contributor(scope: annotatedScope(ctype: 'griffon.transform.sql2o.Sql2oAware')) {
     delegatesTo(findClass('griffon.plugins.sql2o.Sql2oHandler'))
 }

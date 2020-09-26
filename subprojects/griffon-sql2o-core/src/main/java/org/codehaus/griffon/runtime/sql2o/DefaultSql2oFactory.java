@@ -1,11 +1,13 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2014-2020 The author and/or original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.sql2o;
 
+import griffon.annotations.core.Nonnull;
+import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
 import griffon.core.env.Metadata;
 import griffon.core.injection.Injector;
@@ -23,6 +27,10 @@ import griffon.plugins.datasource.DataSourceStorage;
 import griffon.plugins.monitor.MBeanManager;
 import griffon.plugins.sql2o.Sql2oBootstrap;
 import griffon.plugins.sql2o.Sql2oFactory;
+import griffon.plugins.sql2o.events.Sql2oConnectEndEvent;
+import griffon.plugins.sql2o.events.Sql2oConnectStartEvent;
+import griffon.plugins.sql2o.events.Sql2oDisconnectEndEvent;
+import griffon.plugins.sql2o.events.Sql2oDisconnectStartEvent;
 import org.codehaus.griffon.runtime.core.storage.AbstractObjectFactory;
 import org.sql2o.Sql2o;
 import org.sql2o.quirks.Db2Quirks;
@@ -31,7 +39,6 @@ import org.sql2o.quirks.OracleQuirks;
 import org.sql2o.quirks.PostgresQuirks;
 import org.sql2o.quirks.Quirks;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
@@ -39,7 +46,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static griffon.util.GriffonNameUtils.isBlank;
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -62,7 +68,7 @@ public class DefaultSql2oFactory extends AbstractObjectFactory<Sql2o> implements
     private Metadata metadata;
 
     @Inject
-    public DefaultSql2oFactory(@Nonnull @Named("datasource") griffon.core.Configuration configuration, @Nonnull GriffonApplication application) {
+    public DefaultSql2oFactory(@Nonnull @Named("datasource") Configuration configuration, @Nonnull GriffonApplication application) {
         super(configuration, application);
     }
 
@@ -94,14 +100,14 @@ public class DefaultSql2oFactory extends AbstractObjectFactory<Sql2o> implements
     @Override
     public Sql2o create(@Nonnull String name) {
         Map<String, Object> config = getConfigurationFor(name);
-        event("Sql2oConnectStart", asList(name, config));
+        event(Sql2oConnectStartEvent.of(name, config));
         Sql2o sql2o = createSql2o(name, config);
 
         for (Object o : injector.getInstances(Sql2oBootstrap.class)) {
             ((Sql2oBootstrap) o).init(name, sql2o);
         }
 
-        event("Sql2oConnectEnd", asList(name, config, sql2o));
+        event(Sql2oConnectEndEvent.of(name, config, sql2o));
         return sql2o;
     }
 
@@ -109,7 +115,7 @@ public class DefaultSql2oFactory extends AbstractObjectFactory<Sql2o> implements
     public void destroy(@Nonnull String name, @Nonnull Sql2o instance) {
         requireNonNull(instance, "Argument 'instance' must not be null");
         Map<String, Object> config = getConfigurationFor(name);
-        event("Sql2oDisconnectStart", asList(name, config, instance));
+        event(Sql2oDisconnectStartEvent.of(name, config, instance));
 
         for (Object o : injector.getInstances(Sql2oBootstrap.class)) {
             ((Sql2oBootstrap) o).destroy(name, instance);
@@ -117,7 +123,7 @@ public class DefaultSql2oFactory extends AbstractObjectFactory<Sql2o> implements
 
         closeDataSource(name);
 
-        event("Sql2oDisconnectEnd", asList(name, config));
+        event(Sql2oDisconnectEndEvent.of(name, config));
     }
 
     @Nonnull

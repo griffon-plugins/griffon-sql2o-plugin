@@ -1,11 +1,13 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2014-2020 The author and/or original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,10 +17,17 @@
  */
 package griffon.plugins.sql2o
 
+import griffon.annotations.inject.BindTo
 import griffon.core.GriffonApplication
-import griffon.core.RunnableWithArgs
-import griffon.core.test.GriffonUnitRule
-import griffon.inject.BindTo
+import griffon.plugins.datasource.events.DataSourceConnectEndEvent
+import griffon.plugins.datasource.events.DataSourceConnectStartEvent
+import griffon.plugins.datasource.events.DataSourceDisconnectEndEvent
+import griffon.plugins.datasource.events.DataSourceDisconnectStartEvent
+import griffon.plugins.sql2o.events.Sql2oConnectEndEvent
+import griffon.plugins.sql2o.events.Sql2oConnectStartEvent
+import griffon.plugins.sql2o.events.Sql2oDisconnectEndEvent
+import griffon.plugins.sql2o.events.Sql2oDisconnectStartEvent
+import griffon.test.core.GriffonUnitRule
 import org.junit.Rule
 import org.sql2o.Sql2o
 import org.sql2o.StatementRunnable
@@ -26,6 +35,7 @@ import org.sql2o.StatementRunnableWithResult
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import javax.application.event.EventHandler
 import javax.inject.Inject
 
 @Unroll
@@ -46,17 +56,13 @@ class Sql2oSpec extends Specification {
     void 'Open and close default sql2o'() {
         given:
         List eventNames = [
-            'Sql2oConnectStart', 'DataSourceConnectStart',
-            'DataSourceConnectEnd', 'Sql2oConnectEnd',
-            'Sql2oDisconnectStart', 'DataSourceDisconnectStart',
-            'DataSourceDisconnectEnd', 'Sql2oDisconnectEnd'
+            'Sql2oConnectStartEvent', 'DataSourceConnectStartEvent',
+            'DataSourceConnectEndEvent', 'Sql2oConnectEndEvent',
+            'Sql2oDisconnectStartEvent', 'DataSourceDisconnectStartEvent',
+            'DataSourceDisconnectEndEvent', 'Sql2oDisconnectEndEvent'
         ]
-        List events = []
-        eventNames.each { name ->
-            application.eventRouter.addEventListener(name, { Object... args ->
-                events << [name: name, args: args]
-            } as RunnableWithArgs)
-        }
+        TestEventHandler testEventHandler = new TestEventHandler()
+        application.eventRouter.subscribe(testEventHandler)
 
         when:
         sql2oHandler.withSql2o { String datasourceName, Sql2o sql2o ->
@@ -67,8 +73,8 @@ class Sql2oSpec extends Specification {
         sql2oHandler.closeSql2o()
 
         then:
-        events.size() == 8
-        events.name == eventNames
+        testEventHandler.events.size() == 8
+        testEventHandler.events == eventNames
     }
 
     void 'Connect to default Sql2o'() {
@@ -169,4 +175,48 @@ class Sql2oSpec extends Specification {
 
     @BindTo(Sql2oBootstrap)
     private TestSql2oBootstrap bootstrap = new TestSql2oBootstrap()
+
+    private class TestEventHandler {
+        List<String> events = []
+
+        @EventHandler
+        void handleDataSourceConnectStartEvent(DataSourceConnectStartEvent event) {
+            events << event.class.simpleName
+        }
+
+        @EventHandler
+        void handleDataSourceConnectEndEvent(DataSourceConnectEndEvent event) {
+            events << event.class.simpleName
+        }
+
+        @EventHandler
+        void handleDataSourceDisconnectStartEvent(DataSourceDisconnectStartEvent event) {
+            events << event.class.simpleName
+        }
+
+        @EventHandler
+        void handleDataSourceDisconnectEndEvent(DataSourceDisconnectEndEvent event) {
+            events << event.class.simpleName
+        }
+
+        @EventHandler
+        void handleSql2oConnectStartEvent(Sql2oConnectStartEvent event) {
+            events << event.class.simpleName
+        }
+
+        @EventHandler
+        void handleSql2oConnectEndEvent(Sql2oConnectEndEvent event) {
+            events << event.class.simpleName
+        }
+
+        @EventHandler
+        void handleSql2oDisconnectStartEvent(Sql2oDisconnectStartEvent event) {
+            events << event.class.simpleName
+        }
+
+        @EventHandler
+        void handleSql2oDisconnectEndEvent(Sql2oDisconnectEndEvent event) {
+            events << event.class.simpleName
+        }
+    }
 }

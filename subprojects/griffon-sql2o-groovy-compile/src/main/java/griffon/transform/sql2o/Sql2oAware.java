@@ -15,28 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.plugins.sql2o;
+package griffon.transform.sql2o;
 
-import griffon.plugins.sql2o.exceptions.RuntimeSql2oException;
-
-import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
+import java.lang.annotation.*;
 
 /**
+ * <p>Annotates a class.</p>
+ *
  * @author Andres Almiray
+ * @see griffon.plugins.sql2o.Sql2oHandler
  */
-public interface Sql2oHandler {
-    // tag::methods[]
-    @Nullable
-    <R> R withSql2o(@Nonnull Sql2oCallback<R> callback)
-        throws RuntimeSql2oException;
-
-    @Nullable
-    <R> R withSql2o(@Nonnull String datasourceName, @Nonnull Sql2oCallback<R> callback)
-        throws RuntimeSql2oException;
-
-    void closeSql2o();
-
-    void closeSql2o(@Nonnull String datasourceName);
-    // end::methods[]
+@Documented
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.TYPE})
+public @interface Sql2oAware {
 }

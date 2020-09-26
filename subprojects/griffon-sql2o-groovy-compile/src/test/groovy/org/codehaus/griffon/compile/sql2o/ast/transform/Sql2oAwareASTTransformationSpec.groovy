@@ -1,11 +1,13 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2014-2020 The author and/or original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +32,7 @@ class Sql2oAwareASTTransformationSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-        @griffon.transform.Sql2oAware
+        @griffon.transform.sql2o.Sql2oAware
         class Bean { }
         new Bean()
         ''')
@@ -57,8 +59,9 @@ class Sql2oAwareASTTransformationSpec extends Specification {
         import griffon.plugins.sql2o.exceptions.RuntimeSql2oException
         import griffon.plugins.sql2o.Sql2oHandler
 
-        import javax.annotation.Nonnull
-        @griffon.transform.Sql2oAware
+        import griffon.annotations.core.Nonnull
+
+        @griffon.transform.sql2o.Sql2oAware
         class Sql2oHandlerBean implements Sql2oHandler {
             @Override
             public <R> R withSql2o(@Nonnull Sql2oCallback<R> callback) throws RuntimeSql2oException {
