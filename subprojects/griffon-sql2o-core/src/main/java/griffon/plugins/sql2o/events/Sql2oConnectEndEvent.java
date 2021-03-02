@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2014-2020 The author and/or original authors.
+ * Copyright 2014-2021 The author and/or original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 3.0.0
  */
-@Label("Plug-in Layer Removed")
 public class Sql2oConnectEndEvent extends Event {
     private final String name;
     private final Map<String, Object> config;

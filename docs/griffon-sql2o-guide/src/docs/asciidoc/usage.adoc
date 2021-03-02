@@ -68,7 +68,7 @@ package com.acme;
 import griffon.plugins.sql2o.Sql2oBootstrap;
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 @ServiceProviderFor(Module.class)
 public class ApplicationModule extends AbstractModule {
@@ -95,7 +95,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 
 import griffon.plugins.sql2o.Sql2oHandler;
 import griffon.plugins.sql2o.Sql2oCallback;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import org.sql2o.Sql2o;
 import org.sql2o.StatementRunnableWithResult;
 
@@ -135,7 +135,7 @@ package com.acme
 import griffon.core.artifact.GriffonService
 
 import griffon.plugins.sql2o.Sql2oHandler
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import org.sql2o.Sql2o
 import org.sql2o.StatementRunnableWithResult
 
@@ -182,7 +182,7 @@ package com.acme
 import griffon.core.artifact.GriffonService
 import griffon.transform.Sql2oAware
 
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import org.sql2o.Sql2o
 import org.sql2o.StatementRunnableWithResult
 
